@@ -192,6 +192,9 @@ headers:
 | **`octavia generate source`**             | Generate a local YAML configuration for a new source.                                      |
 | **`octavia generate destination`**        | Generate a local YAML configuration for a new destination.                                 |
 | **`octavia generate connection`**         | Generate a local YAML configuration for a new connection.                                  |
+| **`octavia delete source`**               | Delete an existing source.                                                                 |
+| **`octavia delete destination`**          | Delete an existing destination.                                                            |
+| **`octavia delete connection`**           | Delete an existing connection.                                                             |
 | **`octavia apply`**                       | Create or update Airbyte remote resources according to local YAML configurations.          |
 
 #### `octavia init`
@@ -640,6 +643,69 @@ The YAML file will be stored at `./connections/<connection_name>/configuration.y
 ```bash
 $ octavia generate connection --source sources/weather/configuration.yaml --destination destinations/my_db/configuration.yaml weather_to_pg
 ✅ - Created the connection template for weather_to_pg in ./connections/weather_to_pg/configuration.yaml.
+```
+
+#### `octavia delete source <SOURCE_ID> or <SOURCE_NAME>`
+
+Delete specific source resource from your Airbyte instance.
+
+| **Argument**    | **Description**                                                                               |
+| --------------- | --------------------------------------------------------------------------------------------- |
+| `SOURCE_ID`     | The source id.                                                                                |
+| `SOURCE_NAME`   | The source name.                                                                              |
+
+**Example**:
+
+```bash
+$ octavia delete source d8540a80-6120-485d-b7d6-272bca477d9b
+✅ - Deleted the source d8540a80-6120-485d-b7d6-272bca477d9b
+```
+
+```bash
+$ octavia delete source my_postgres_source
+✅ - Deleted the source my_postgres_source
+```
+
+#### `octavia delete destination <DESNTINATION_ID> or <DESNTINATION_NAME>`
+
+Delete specific destination resource from your Airbyte instance.
+
+| **Argument**         | **Description**                                                                               |
+| -------------------- | --------------------------------------------------------------------------------------------- |
+| `DESTINATION_ID`     | The destination id.                                                                           |
+| `DESTINATION_NAME`   | The destination name.                                                                         |
+
+**Example**:
+
+```bash
+$ octavia delete destination d8540a80-6120-485d-b7d6-272bca477d9b
+✅ - Deleted the destination d8540a80-6120-485d-b7d6-272bca477d9b
+```
+
+```bash
+$ octavia delete destination my_snowflalke_destination
+✅ - Deleted the destination my_snowflalke_destination
+```
+
+#### `octavia delete connection <CONNECTION_ID> or <CONNECTION_NAME>`
+
+Delete specific destination resource from your Airbyte instance.
+
+| **Argument**         | **Description**                                                                               |
+| -------------------- | --------------------------------------------------------------------------------------------- |
+| `CONNECTION_ID`      | The connection id.                                                                            |
+| `CONNECTION_NAME`    | The connection name.                                                                          |
+
+**Example**:
+
+```bash
+$ octavia delete connection d8540a80-6120-485d-b7d6-272bca477d9b
+✅ - Deleted the connection d8540a80-6120-485d-b7d6-272bca477d9b
+```
+
+```bash
+$ octavia delete connection my_connection
+✅ - Deleted the connection my_connection
 ```
 
 #### `octavia apply`
