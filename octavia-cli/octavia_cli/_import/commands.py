@@ -7,7 +7,7 @@ from typing import List, Type, Union
 
 import airbyte_api_client
 import click
-from octavia_cli.apply import resources
+from octavia_cli import resources
 from octavia_cli.base_commands import OctaviaCommand
 from octavia_cli.check_context import requires_init
 from octavia_cli.generate import definitions, renderers

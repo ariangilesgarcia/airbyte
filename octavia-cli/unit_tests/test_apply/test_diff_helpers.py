@@ -3,7 +3,7 @@
 #
 
 import pytest
-from octavia_cli.apply import diff_helpers
+from octavia_cli import diff_helpers
 
 
 def test_hash_config():

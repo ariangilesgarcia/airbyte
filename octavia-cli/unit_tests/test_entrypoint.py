@@ -240,4 +240,5 @@ def test_available_commands():
         entrypoint.init_commands.init,
         entrypoint.generate_commands.generate,
         entrypoint.apply_commands.apply,
+        entrypoint.delete_commands.delete,
     ]

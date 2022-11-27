@@ -19,8 +19,8 @@ from octavia_cli._import.commands import connection as octavia_import_connection
 from octavia_cli._import.commands import destination as octavia_import_destination
 from octavia_cli._import.commands import source as octavia_import_source
 from octavia_cli.apply.commands import apply as octavia_apply
-from octavia_cli.apply.resources import ResourceState
-from octavia_cli.apply.resources import factory as resource_factory
+from octavia_cli.resources import ResourceState
+from octavia_cli.resources import factory as resource_factory
 
 pytestmark = pytest.mark.integration
 click_runner = CliRunner()

@@ -13,6 +13,7 @@ from airbyte_api_client.model.workspace_id_request_body import WorkspaceIdReques
 from ._import import commands as import_commands
 from .api_http_headers import ApiHttpHeader, merge_api_headers, set_api_headers_on_api_client
 from .apply import commands as apply_commands
+from .delete import commands as delete_commands
 from .check_context import check_api_health, check_is_initialized, check_workspace_exists
 from .generate import commands as generate_commands
 from .get import commands as get_commands
@@ -27,6 +28,7 @@ AVAILABLE_COMMANDS: List[click.Command] = [
     init_commands.init,
     generate_commands.generate,
     apply_commands.apply,
+    delete_commands.delete,
 ]
 
 

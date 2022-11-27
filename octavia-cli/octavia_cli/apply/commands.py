@@ -9,10 +9,9 @@ import airbyte_api_client
 import click
 from octavia_cli.base_commands import OctaviaCommand
 from octavia_cli.check_context import REQUIRED_PROJECT_DIRECTORIES, requires_init
-
-from .diff_helpers import display_diff_line
-from .resources import BaseResource
-from .resources import factory as resource_factory
+from octavia_cli.resources import BaseResource
+from octavia_cli.resources import factory as resource_factory
+from octavia_cli.diff_helpers import display_diff_line
 
 
 @click.command(cls=OctaviaCommand, name="apply", help="Create or update Airbyte remote resources according local YAML configurations.")

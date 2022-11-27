@@ -4,7 +4,7 @@
 
 import click
 import octavia_cli.generate.definitions as definitions
-from octavia_cli.apply import resources
+from octavia_cli import resources
 from octavia_cli.base_commands import OctaviaCommand
 from octavia_cli.check_context import requires_init
 

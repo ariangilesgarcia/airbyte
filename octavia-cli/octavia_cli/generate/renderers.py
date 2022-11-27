@@ -11,7 +11,7 @@ import click
 import yaml
 from airbyte_api_client.model.airbyte_catalog import AirbyteCatalog
 from jinja2 import Environment, PackageLoader, Template, select_autoescape
-from octavia_cli.apply import resources
+from octavia_cli import resources
 from slugify import slugify
 
 from .definitions import BaseDefinition, ConnectionDefinition

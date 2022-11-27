@@ -6,7 +6,7 @@ import os
 
 import pytest
 import yaml
-from octavia_cli.apply import yaml_loaders
+from octavia_cli import yaml_loaders
 
 
 def test_env_var_replacer(mocker):

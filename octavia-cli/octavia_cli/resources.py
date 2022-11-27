@@ -234,6 +234,20 @@ class BaseResource(abc.ABC):
 
     @property
     @abc.abstractmethod
+    def delete_function_name(
+        self,
+    ):  # pragma: no cover
+        pass
+
+    @property
+    @abc.abstractmethod
+    def delete_payload(
+        self,
+    ):  # pragma: no cover
+        pass
+
+    @property
+    @abc.abstractmethod
     def resource_id_field(
         self,
     ):  # pragma: no cover
@@ -257,6 +271,7 @@ class BaseResource(abc.ABC):
             configuration_path (str): The path to the local configuration describing the resource with YAML.
         """
         self._create_fn = getattr(self.api, self.create_function_name)
+        self._delete_fn = getattr(self.api, self.delete_function_name)
         self._update_fn = getattr(self.api, self.update_function_name)
         self._get_fn = getattr(self.api, self.get_function_name)
 
@@ -360,6 +375,25 @@ class BaseResource(abc.ABC):
         diff = compute_diff(remote_config, local_config)
         return diff.pretty()
 
+    def _delete(
+        self,
+        operation_fn: Callable,
+        payload: dict,
+    ):
+        try:
+            result = operation_fn(self.api_instance, payload)
+            # new_state = ResourceState.create(
+            #     self.configuration_path, self.configuration_hash, self.workspace_id, result[self.resource_id_field]
+            # )
+            return result
+        except airbyte_api_client.ApiException as api_error:
+            if api_error.status == 422:
+                # This  API response error is really verbose, but it embodies all the details about why the config is not valid.
+                # TODO alafanechere: try to parse it and display it in a more readable way.
+                raise InvalidConfigurationError(api_error.body)
+            else:
+                raise api_error
+
     def _create_or_update(
         self,
         operation_fn: Callable,
@@ -414,6 +448,13 @@ class BaseResource(abc.ABC):
         """
         return self._create_or_update(self._create_fn, self.create_payload)
 
+    def delete(self) -> Union[SourceRead, DestinationRead, ConnectionRead]:
+        """Public function to delete the resource on the remote Airbyte instance.
+        Returns:
+            Union[SourceRead, DestinationRead, ConnectionRead]: The deleted resource.
+        """
+        return self._delete(self._delete_fn, self.delete_payload)
+
     def update(self) -> Union[SourceRead, DestinationRead, ConnectionRead]:
         """Public function to update the resource on the remote Airbyte instance.
         Returns:
@@ -457,8 +498,9 @@ class SourceAndDestination(BaseResource):
 class Source(SourceAndDestination):
 
     api = source_api.SourceApi
-    create_function_name = "create_source"
     resource_id_field = "source_id"
+    create_function_name = "create_source"
+    delete_function_name = "delete_source"
     get_function_name = "get_source"
     update_function_name = "update_source"
     resource_type = "source"
@@ -466,6 +508,14 @@ class Source(SourceAndDestination):
     @property
     def create_payload(self):
         return SourceCreate(self.definition_id, self.configuration, self.workspace_id, self.resource_name)
+
+    @property
+    def delete_payload(self):
+        """Defines the payload to delete the remote source.
+        Returns:
+            SourceRead: The SourceRead model instance
+        """
+        return SourceIdRequestBody(self.resource_id)
 
     @property
     def get_payload(self) -> Optional[SourceIdRequestBody]:
@@ -516,8 +566,9 @@ class Source(SourceAndDestination):
 
 class Destination(SourceAndDestination):
     api = destination_api.DestinationApi
-    create_function_name = "create_destination"
     resource_id_field = "destination_id"
+    create_function_name = "create_destination"
+    delete_function_name = "delete_destination"
     get_function_name = "get_destination"
     update_function_name = "update_destination"
     resource_type = "destination"
@@ -529,6 +580,15 @@ class Destination(SourceAndDestination):
             DestinationCreate: The DestinationCreate model instance
         """
         return DestinationCreate(self.workspace_id, self.resource_name, self.definition_id, self.configuration)
+
+    @property
+    def delete_payload(self) -> Optional[DestinationRead]:
+        """Defines the payload to delete the remote destination.
+        Returns:
+            DestinationDelete: The DestinationDelete model instance
+        """
+        if self.state is not None:
+            return DestinationIdRequestBody(self.resource_id)
 
     @property
     def get_payload(self) -> Optional[DestinationRead]:
@@ -563,6 +623,7 @@ class Connection(BaseResource):
     APPLY_PRIORITY = 1
     api = web_backend_api.WebBackendApi
     create_function_name = "web_backend_create_connection"
+    delete_function_name = "web_backend_delete_connection"
     update_function_name = "web_backend_update_connection"
     get_function_name = "web_backend_get_connection"
     resource_id_field = "connection_id"
@@ -670,6 +731,15 @@ class Connection(BaseResource):
         return WebBackendConnectionCreate(
             name=self.resource_name, source_id=self.source_id, destination_id=self.destination_id, **self.configuration
         )
+
+    @property
+    def delete_payload(self) -> Optional[WebBackendConnectionRequestBody]:
+        """Defines the payload to delete the remote connection.
+        Returns:
+            ConnectionIdRequestBody: The ConnectionIdRequestBody payload.
+        """
+        return WebBackendConnectionRequestBody(connection_id=self.resource_id)
+
 
     @property
     def get_payload(self) -> Optional[WebBackendConnectionRequestBody]:

@@ -18,7 +18,7 @@ from airbyte_api_client.model.operator_type import OperatorType
 from airbyte_api_client.model.resource_requirements import ResourceRequirements
 from airbyte_api_client.model.source_definition_id_with_workspace_id import SourceDefinitionIdWithWorkspaceId
 from airbyte_api_client.model.web_backend_operation_create_or_update import WebBackendOperationCreateOrUpdate
-from octavia_cli.apply import resources, yaml_loaders
+from octavia_cli import resources, yaml_loaders
 
 
 class TestResourceState:

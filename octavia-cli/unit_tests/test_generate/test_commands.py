@@ -4,7 +4,7 @@
 
 import pytest
 from click.testing import CliRunner
-from octavia_cli.apply.resources import NonExistingResourceError
+from octavia_cli.resources import NonExistingResourceError
 from octavia_cli.generate import commands
 
 

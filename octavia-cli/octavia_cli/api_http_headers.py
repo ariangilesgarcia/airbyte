@@ -9,7 +9,7 @@ import airbyte_api_client
 import click
 import yaml
 
-from .apply.yaml_loaders import EnvVarLoader
+from .yaml_loaders import EnvVarLoader
 from .init.commands import API_HTTP_HEADERS_TARGET_PATH
 
 
